@@ -139,26 +139,47 @@ let lon_min = 46.97;
 let lat_max = 55.00;
 let lon_max = 86.57;
 
-// функция для обработки API
-function fetchFlightData() {
-    var url = 'https://'+'@opensky-network.org/api/states/all?';
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-        
-    console.log(data.states);
-    
 
+const url = 'https://adsbexchange-com1.p.rapidapi.com/v2/lat/43.2551/lon/76.9126/dist/250/';
+const options = {
+    method: 'GET',
+    headers: {
+        'X-RapidAPI-Key': 'ce9625f99bmshf7fc053e2a5bb90p131d82jsn3050022c3604',
+        'X-RapidAPI-Host': 'adsbexchange-com1.p.rapidapi.com'
+    }
+};
+
+// функция для обработки API
+async function fetchFlightData() {
     
-    //console.log(lat,lon);
-    
-            
-    })
-    .catch(error => console.error('Error fetching flight data:', error));
+    try {
+        const response = await fetch(url, options);
+        const result = await response.text();
+        
+        const data = JSON.parse(result);
+        
+
+        if(data.ac){
+            data.ac.forEach(plane => {
+                const latitude = plane.lat;
+                const longitude = plane.lon;
+                console.log(latitude, "     ", longitude)
+                
+                
+            })
+        }
+        //console.log(data);
+        
+        
+    } catch (error) {
+        console.error(error);
+    } 
+
 }
 
 
 fetchFlightData();
 
-        
-//setInterval(function(){ fetchFlightData()},5000);
+
+
+
